@@ -10,7 +10,8 @@ ghfghfghfgh
 ```
 asdasdasd
 ```
-<img src="media/homeofg_pong.gif" width="400" height="250"/>
+
+<img src="media/tank.gif" width="200" height="400"/> <img src="media/homeofg_pong.gif" width="500" height="400"/>
 
 <!--- ![alt text](media/homeofg_pong.gif "Pong-homeostasis-forager") --->
 
