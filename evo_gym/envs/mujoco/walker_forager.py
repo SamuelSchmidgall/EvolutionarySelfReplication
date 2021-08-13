@@ -1,0 +1,111 @@
+import numpy as np
+from evo_gym.envs.mujoco import mujoco_env
+from evo_gym import utils
+
+
+DEFAULT_CAMERA_CONFIG = {
+    'trackbodyid': 2,
+    'distance': 4.0,
+    'lookat': np.array((0.0, 0.0, 1.15)),
+    'elevation': -20.0,
+}
+
+
+class WalkerForagerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
+    def __init__(self,
+                 xml_file='walker2d.xml',
+                 forward_reward_weight=1.0,
+                 ctrl_cost_weight=1e-3,
+                 healthy_reward=1.0,
+                 terminate_when_unhealthy=True,
+                 healthy_z_range=(0.8, 2.0),
+                 healthy_angle_range=(-1.0, 1.0),
+                 reset_noise_scale=5e-3,
+                 exclude_current_positions_from_observation=True):
+        utils.EzPickle.__init__(**locals())
+
+        self.hunger = 0
+        self.max_hunger = 5000
+        self.consumption_weight = 10
+
+        self._terminate_when_unhealthy = terminate_when_unhealthy
+
+        self._healthy_z_range = healthy_z_range
+        self._healthy_angle_range = healthy_angle_range
+
+        self._reset_noise_scale = reset_noise_scale
+
+        self._exclude_current_positions_from_observation = (
+            exclude_current_positions_from_observation)
+
+        mujoco_env.MujocoEnv.__init__(self, xml_file, 4)
+
+
+    @property
+    def is_healthy(self):
+        z, angle = self.sim.data.qpos[1:3]
+
+        min_z, max_z = self._healthy_z_range
+        min_angle, max_angle = self._healthy_angle_range
+
+        healthy_z = min_z < z < max_z
+        healthy_angle = min_angle < angle < max_angle
+        is_healthy = healthy_z and healthy_angle
+
+        return is_healthy
+
+    @property
+    def done(self):
+        done = (not self.is_healthy
+                if self._terminate_when_unhealthy
+                else False)
+        return done
+
+    def _get_obs(self):
+        position = self.sim.data.qpos.flat.copy()
+        velocity = np.clip(
+            self.sim.data.qvel.flat.copy(), -10, 10)
+
+        if self._exclude_current_positions_from_observation:
+            position = position[1:]
+
+        observation = np.concatenate((position, velocity)).ravel()
+        return observation
+
+    def step(self, action):
+        x_position_before = self.sim.data.qpos[0]
+        self.do_simulation(action, self.frame_skip)
+        x_position_after = self.sim.data.qpos[0]
+        self.hunger -= self.consumption_weight*abs(x_position_after-x_position_before)
+
+        observation = self._get_obs()
+        done = self.done
+        info = dict()
+
+        if self.hunger > self.max_hunger:
+            done = True
+
+        self.hunger += 1
+        return observation, done, info
+
+    def reset_model(self):
+        noise_low = -self._reset_noise_scale
+        noise_high = self._reset_noise_scale
+
+        self.hunger = 0
+        qpos = self.init_qpos + self.np_random.uniform(
+            low=noise_low, high=noise_high, size=self.model.nq)
+        qvel = self.init_qvel + self.np_random.uniform(
+            low=noise_low, high=noise_high, size=self.model.nv)
+
+        self.set_state(qpos, qvel)
+
+        observation = self._get_obs()
+        return observation
+
+    def viewer_setup(self):
+        for key, value in DEFAULT_CAMERA_CONFIG.items():
+            if isinstance(value, np.ndarray):
+                getattr(self.viewer.cam, key)[:] = value
+            else:
+                setattr(self.viewer.cam, key, value)

@@ -1,61 +1,9 @@
-## Evolutionary Self-Replication as a Mechanism for Producing Artificial Intelligence
+import pickle
+import evo_gym
+import numpy as np
+from copy import deepcopy
 
 
-<img src="./media/tank.gif" width="200" height="400"/> <img src="./media/homeofg_pong.gif" width="500" height="400"/>
-
-
-
-#### A simple evolutionary self-replicator
-
-To better understand the way in which intelligent self-replicators emerge from a computational perspective, presented below is a minimalistic implementation of the code used to develop evolutionary self-replicators.
-
-
-### The Replicator
-```
-class Replicator:
-    """ Individual self-replication structure """
-    def __init__(self):
-        """ Initialize replicator """
-        self.lifespan = 0
-        self.network = RecurrentNeuralNetwork(
-            input_dim=self.env.observation_space.shape[0],
-            output_dim=self.env.action_space.n)
-        self.env = evo_gym.make("CartPole-v1")
-        self.env_state = self.env.reset()
-```
-> Each replicator contains a behavior generator, here, a recurrent neural network, and information about the environment with which it is surviving in.
-```
-    def replicate(self):
-        """
-        Replicate mutated copy of self
-        :return: (Replicator) mutated copy
-        """
-        variant = deepcopy(self)
-        variant.lifespan = 0
-        variant.network.reset()
-        variant.env_state = variant.env.reset()
-        variant.network = variant.network.mutate()
-        return variant
-```
-> The replicate function provides the ability for replication by producing an identical copy of the original replicator (the variant) and mutating it's structure (behavioral structure through neural network weights, in this case). The network and environment parameters are reset accordingly.
-```
-    def step(self):
-        """
-        Replicator's interaction with environment
-        :return: (bool) whether or not replicator died
-        """
-        self.lifespan += 1
-        action = self.network.forward(self.env_state)
-        action = np.argmax(action)
-        self.env_state, death, _ = self.env.step(action)
-        return death
-```
-> The step function is the mechanism from which the organism interacts with the environment, and partakes in survival. Quite simply, an action is taken given an environment state, and that action is applied to the organism's embodied self. The new state, and whether or not the organism died is returned. If the organism dies (as will be seen below) it is simply removed from the grid to make room for other organisms to replicate into that position.
-
-
-
-### The Neural Network
-```
 class RecurrentNeuralNetwork:
     """
      Simple one-hidden-layer neural network
@@ -77,15 +25,11 @@ class RecurrentNeuralNetwork:
         self.w1 = np.zeros((self.input_dim, self.hidden))  # parameter
         self.rw1  = np.zeros((self.hidden, self.hidden))   # parameter
         self.w2 = np.zeros((self.hidden, self.output_dim)) # parameter
-```
-> Here, w1, rw1, and w2 represent the parameters of the network, which are mutated during organism replications. While nearly any aspect of the organism can be mutated, the network weights were chosen to relate this with other AI applications. Future work could include mutating network structure, the robotic morphology, or even the code itself; there are no limitations, and hence plenty of room for creativity.
-```
+
     def reset(self):
         """ Reset recurrent trace """
         self.rw1_trace  = np.zeros((1, self.hidden))
-```
-> Resets internal parameters, in this case, the recurrent trace.
-```
+
     def forward(self, x):
         """
         Forward propagate sensory information (x)
@@ -99,9 +43,7 @@ class RecurrentNeuralNetwork:
             np.matmul(self.rw1_trace, self.rw1))
         self.rw1_trace = x
         return np.matmul(x, self.w2)
-```
-> Take environmental sensory input (x) and output a behavior produced by the network.
-```
+
     def mutate(self):
         """
         Mutate neural network and return modified copy
@@ -115,12 +57,44 @@ class RecurrentNeuralNetwork:
         variant.w2 += np.random.normal(
             loc=0.0, scale=variant.mutation_scale, size=variant.w2.shape)
         return variant
-```
-> Mutate the network weights with gaussian noise.
 
-### The Replication Grid
 
-```
+class Replicator:
+    """ Individual self-replication structure """
+    def __init__(self):
+        """ Initialize replicator """
+        self.lifespan = 0
+        self.env = evo_gym.make("CartPole-v1")
+        self.env_state = self.env.reset()
+        self.network = RecurrentNeuralNetwork(
+            input_dim=self.env.observation_space.shape[0],
+            output_dim=self.env.action_space.n)
+
+    def replicate(self):
+        """
+        Replicate mutated copy of self
+        :return: (Replicator) mutated copy
+        """
+        variant = deepcopy(self)
+        variant.lifespan = 0
+        variant.network.reset()
+        variant.env_state = variant.env.reset()
+        variant.network = variant.network.mutate()
+        return variant
+
+
+    def step(self):
+        """
+        Replicator's interaction with environment
+        :return: (bool) whether or not replicator died
+        """
+        self.lifespan += 1
+        action = self.network.forward(self.env_state)
+        action = np.argmax(action)
+        self.env_state, death, _ = self.env.step(action)
+        return death
+
+
 class ReplicationGrid:
     """
     1-Dimensional grid containing replicators
@@ -134,9 +108,7 @@ class ReplicationGrid:
         self.replication_prob = 0.1
         self.grid_range = list(range(self.grid_dim))
         self.grid = [None for _ in range(self.grid_dim)]
-```
-> Initialize grid and organism mutation parameters. The replication probability determines the likelihood of organism replication at any given timestep. The mutation probability determines the likelihood of a mutation occuring during replication. The rest determine the 1-dimensional grid structure.
-```
+
     def step(self):
         """
         Replicator's interaction with environment
@@ -157,9 +129,7 @@ class ReplicationGrid:
                 replication_indices.append(_org)
         self.replicate(replication_indices)
         return self.death(death_indices)
-```
-> This function begins by checking if there are any organisms in the grid, if not, then create an initial organism. Then, iterate through every organism in the grid (None means there is nothing there) and have that organism interact with the environment and return whether or not it died. This is followed by a random determining of whether the organism undergoes self-replication. Finally, the the self-replication and death functions are called to process organism replications and deaths.
-```
+
     def death(self, death_indices):
         """
         Remove dead replicators from grid
@@ -172,9 +142,7 @@ class ReplicationGrid:
             self.organisms -= 1
             self.grid[_org] = None
         return dead_orgs
-```
-> This function just iterates through each organism that died and removes it from the grid.
-```
+
     def replicate(self, replication_indices):
         """
         Replicate organism indices
@@ -197,17 +165,40 @@ class ReplicationGrid:
             else:
                 self.grid[free_neighbors.pop(0)] = deepcopy(self.grid[_org])
 
-```
-> Perfom the replication procedure. It is necessary to shuffle the replication indices to make sure that there is no preference for lower-numbered organism grid indices (since they execute first on the step cycle). Check the neighboring grid cells, and replicate into them if they are free (mutating if that is sampled for, otherwise a pure replication). 
 
 
-#### Summary
-That really is everything!
+if __name__ == "__main__":
+    reward_saves = list()
+    repl_grid = ReplicationGrid()
+    max_lifespan, top_solution = 0, None
+    for _k in range(100000):
+        _dead_orgs = repl_grid.step()
+        """ Save oldest solution """
+        for _d_org in _dead_orgs:
+            if _d_org.lifespan > max_lifespan:
+                max_lifespan, top_solution = _d_org.lifespan, _d_org
+                with open("oldest_solution.pkl", "wb") as f:
+                    pickle.dump(_d_org, f)
+        """ Organism lifespan status records """
+        if (_k+1)%1000 == 0:
+            org_lifespans = [_org.lifespan for _org in repl_grid.grid if _org is not None]
+            if len(org_lifespans) > 0:
+                avg_lifespan = sum(org_lifespans)/len(org_lifespans)
+            else:
+                avg_lifespan = 0
+            print("Average Lifespan: {:.2f}, Num Organisms: {}".format(
+                avg_lifespan, repl_grid.organisms))
+            reward_saves.append(avg_lifespan)
+            with open("lifespans.pkl", "wb") as f:
+                pickle.dump(reward_saves, f)
 
 
 
 
-#### Future Research
+
+
+
+
 
 
 
