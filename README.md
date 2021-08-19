@@ -244,7 +244,10 @@ BattleZone-survival-forager-v0
 > I tried to keep everything as simple as possible for ease of understanding as well as ease of use and replicability. I hope you enjoy the interesting phenomenon of evolutionary self-replication, and it inspires some novel and interesting future work.
 
 
+#### An example of lifespan growth
 
+##### Boxing Survial Avoidance
+![BoxingSurvivalAvoid](media/BoxingSurvivalAvoid.png)
 
 
 #### Some ideas for Future Research
