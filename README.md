@@ -247,8 +247,7 @@ BattleZone-survival-forager-v0
 #### An example of lifespan growth
 
 ##### Boxing Survial Avoidance
-![BoxingSurvivalAvoid](media/BoxingSurvivalAvoid.png)
-
+<img src="media/BoxingSurvivalAvoid.png" width="500" height="400">
 
 #### Some ideas for Future Research
 
