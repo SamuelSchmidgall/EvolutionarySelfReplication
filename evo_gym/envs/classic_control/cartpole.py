@@ -76,6 +76,7 @@ class CartPoleEnv(evo_gym.Env):
                         dtype=np.float32)
 
         self.action_space = spaces.Discrete(2)
+        self.action_space.shape = (self.action_space.n,)
         self.observation_space = spaces.Box(-high, high, dtype=np.float32)
 
         self.seed()
