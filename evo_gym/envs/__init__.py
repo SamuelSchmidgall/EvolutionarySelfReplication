@@ -1,20 +1,8 @@
 from evo_gym.envs.registration import registry, register, make, spec
 
-register(
-    id='FetchReach-homeostasis-forager-v0',
-    entry_point='evo_gym.envs.robotics:FetchReachEnv',
-    max_episode_steps=1000000000,
-)
 
 register(
-    id='FetchPickAndPlace-forager-v0',
-    entry_point='evo_gym.envs.robotics:FetchPickAndPlaceEnv',
-    max_episode_steps=1000000000,
-)
-
-
-register(
-    id='CartPole-v1',
+    id='CartPole-survival-v0',
     entry_point='evo_gym.envs.classic_control:CartPoleEnv',
     max_episode_steps=1000000000,
 )
@@ -30,6 +18,7 @@ register(
     entry_point='evo_gym.envs.mujoco.half_cheetah_forager:HalfCheetahForagerEnv',
     max_episode_steps=1000000000,
 )
+
 register(
     id='HumanoidForager-v0',
     entry_point='evo_gym.envs.mujoco.humanoid_forager:HumanoidForagerEnv',
@@ -47,38 +36,40 @@ register(
 )
 
 register(
-    id='HopperForager-v0',
-    entry_point='evo_gym.envs.mujoco.hopper_forager:HopperForagerEnv',
+    id='Boxing-survival-avoidance-v0',
+    entry_point='evo_gym.envs.atari.boxing_survival:BoxingSurvivalAvoidance',
     max_episode_steps=1000000000,
 )
 
 register(
-    id='AntForager-v0',
-    entry_point='evo_gym.envs.mujoco.ant_v3_forager:AntForagerEnv',
-    max_episode_steps=1000000000,
-)
-
-
-register(
-    id='InvertedDoublePendulumHomeostasis-v0',
-    entry_point='evo_gym.envs.mujoco.inverted_double_pendulum:InvertedDoublePendulumHomeostasisEnv',
+    id='Boxing-survival-fight-v0',
+    entry_point='evo_gym.envs.atari.boxing_survival:BoxingSurvivalFight',
     max_episode_steps=1000000000,
 )
 
 register(
-    id='InvertedPendulumHomeostasis-v0',
-    entry_point='evo_gym.envs.mujoco.inverted_pendulum:InvertedPendulumHomeostasisEnv',
+    id='Pong-survival-v0',
+    entry_point='evo_gym.envs.atari.pong_survival:PongSurvival',
     max_episode_steps=1000000000,
 )
-
 
 register(
-    id='CarRacing-v0',
-    entry_point='evo_gym.envs.box2d.car_racing:CarRacing',
+    id='Pong-survival-forager-v0',
+    entry_point='evo_gym.envs.atari.pong_survival:PongSurvivalForager',
     max_episode_steps=1000000000,
 )
 
+register(
+    id='SpaceInvaders-survival-v0',
+    entry_point='evo_gym.envs.atari.space_invaders_survival:SpaceInvadersSurvival',
+    max_episode_steps=1000000000,
+)
 
+register(
+    id='BattleZone-survival-forager-v0',
+    entry_point='evo_gym.envs.atari.battlezone_survival:BattleZoneSurvivalForager',
+    max_episode_steps=1000000000,
+)
 # Atari
 # ----------------------------------------
 
