@@ -73,7 +73,7 @@ class Replicator:
         self.hidden = hyperparameters["hidden_dim"]
         self.env = evo_gym.make(hyperparameters["environment"])
         self.env_state = self.env.reset()
-        self.discrete_action = type(self.env.action_space) is evo_gym.spaces.Box
+        self.discrete_action = type(self.env.action_space) is evo_gym.spaces.Discrete
         self.network = RecurrentNeuralNetwork(
             hidden=self.hidden,
             output_dim=self.env.action_space.shape[0],
@@ -199,7 +199,7 @@ if __name__ == "__main__":
         "mutation_prob": 0.5,          # probability of mutation during replication
         "mutation_scale": 0.01,        # magnitude of weight mutations
         "replication_prob": 0.05,      # probability of replication attempt at each timestep
-        "environment": "HalfCheetahForager-v0",  # evo_gym environment_id
+        "environment": "Boxing-survival-fight-v0",  # evo_gym environment_id
     }
     
     iterations = 0
@@ -209,7 +209,18 @@ if __name__ == "__main__":
     filepath = os.path.dirname(os.path.realpath(__file__))
     
     while True:
+        """ 
+        ---------------------------------------------------
+        | Increment each organism in grid by one timestep |
+        ---------------------------------------------------
+        """
         _dead_orgs = repl_grid.step()
+
+        """ 
+        --------------------
+        | Save Information |
+        --------------------
+        """
         """ Save oldest solution """
         for _d_org in _dead_orgs:
             if _d_org.lifespan > max_lifespan:
