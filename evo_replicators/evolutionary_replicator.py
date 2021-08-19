@@ -199,7 +199,7 @@ if __name__ == "__main__":
         "mutation_prob": 0.5,          # probability of mutation during replication
         "mutation_scale": 0.01,        # magnitude of weight mutations
         "replication_prob": 0.05,      # probability of replication attempt at each timestep
-        "environment": "Boxing-survival-fight-v0",  # evo_gym environment_id
+        "environment": "CartPole-survival-v0",  # evo_gym environment_id
     }
     
     iterations = 0

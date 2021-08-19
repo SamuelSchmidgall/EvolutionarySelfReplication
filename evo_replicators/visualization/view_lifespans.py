@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     matplotlib.rcParams.update({'font.size': 12})
     plt.plot(list(range(len(lifespans))), lifespans)
-    plt.title("Average Organism Lifespan over time (Boxing-survival-avoidance)")
+    plt.title("Average Organism Lifespan over time (Boxing-survival-fight)")
     plt.xlabel("Organism number")
     plt.ylabel("Average Lifespan (all organisms)")
     plt.show()
