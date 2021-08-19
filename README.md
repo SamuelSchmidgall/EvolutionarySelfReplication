@@ -265,5 +265,5 @@ A long proposed idea floating around within NASA is the concept of self-replicat
 The introduction of metabolism and survival into the environment opens the possibility of determining the effect of adding energy constraints to (neural or morphological) design and determining optimal structures in a natural selection context. Perhaps massive brains like humans emerge in complex environments, or perhaps miniscule, hyper-tuned brains emerge like small bugs and such.
 
 ##### Creativity
-One of the appealing aspects of evolutionary self-replication, is that the evolutionary design is unlimited in potential, and is open to a significant degree of creativity in design.
-I would love to see some creative and unique approaches emerge; creativity is essential.
+One of the appealing aspects of evolutionary self-replication, is that the design is unlimited in potential, and is open to a significant degree of creativity.
+I would love to see some creative and unique approaches to evolution emerge.
