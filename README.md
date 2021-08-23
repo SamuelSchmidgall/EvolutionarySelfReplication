@@ -244,6 +244,13 @@ BattleZone-survival-forager-v0
 > I tried to keep everything as simple as possible for ease of understanding as well as ease of use and replicability. I hope you enjoy the interesting phenomenon of evolutionary self-replication, and it inspires some novel and interesting future work.
 
 
+
+#### A discussion of limitations
+
+Perhaps the most difficult limitation of this work is one that applies to the majority of learning algorithms, and that is computational complexity. For the tasks presented in this work, it was rather quick to produce good results, especially in the robotic learning domains; however, this method has difficulty scaling to environments with high simulation run-time cost, especially considering there are a series of environments running simultaneously. Future work in this domain of high-complexity will likely require a mechanism of full parallelization, which seems realistic considering the parallel nature of the task.
+
+Another limitation is that the tasks must be capable of being defined in terms of life and death, which often requires a bit of creativity. The use of foraging opens many parallels to reward-based optimization, however, this will likely not work in every situation.
+
 #### An example of lifespan growth
 
 ##### Boxing Survial Avoidance
