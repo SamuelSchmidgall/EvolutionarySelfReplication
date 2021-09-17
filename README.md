@@ -278,6 +278,7 @@ One of the appealing aspects of evolutionary self-replication, is that the desig
 I would love to see some creative and unique approaches to evolution emerge.
 
 Citation:
+```
 @misc{schmidgall2021evolutionary,
       title={Evolutionary Self-Replication as a Mechanism for Producing Artificial Intelligence}, 
       author={Samuel Schmidgall and Joseph Hays},
@@ -286,3 +287,4 @@ Citation:
       archivePrefix={arXiv},
       primaryClass={cs.NE}
 }
+```
