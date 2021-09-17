@@ -5,6 +5,8 @@
 
 
 
+The paper: https://arxiv.org/pdf/2109.08057.pdf
+
 #### A simple evolutionary self-replicator
 
 To better understand the way in which intelligent self-replicators emerge from a computational perspective, presented below is a minimalistic implementation of the code used to develop evolutionary self-replicators.
@@ -274,3 +276,13 @@ The introduction of metabolism and survival into the environment opens the possi
 ##### Creativity
 One of the appealing aspects of evolutionary self-replication, is that the design is unlimited in potential, and is open to a significant degree of creativity.
 I would love to see some creative and unique approaches to evolution emerge.
+
+Citation:
+@misc{schmidgall2021evolutionary,
+      title={Evolutionary Self-Replication as a Mechanism for Producing Artificial Intelligence}, 
+      author={Samuel Schmidgall and Joseph Hays},
+      year={2021},
+      eprint={2109.08057},
+      archivePrefix={arXiv},
+      primaryClass={cs.NE}
+}
