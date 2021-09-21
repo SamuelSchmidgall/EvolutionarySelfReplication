@@ -106,7 +106,7 @@ class Replicator:
         :return: (bool) whether or not replicator died
         """
         self.lifespan += 1
-        action = self.network.forward(self.env_state)
+        action = self.network.forward(self.env_state).squeeze()
         if self.discrete_action:
             action = np.argmax(action)
         self.env_state, death, _ = self.env.step(action)
